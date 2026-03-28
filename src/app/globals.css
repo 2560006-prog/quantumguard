@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-outfit: 'Outfit', system-ui, sans-serif;
+  --font-jetbrains: 'JetBrains Mono', monospace;
+
+  /* Brand palette */
+  --bg-primary: #0a0f0d;
+  --bg-secondary: #0f1710;
+  --bg-card: #121a13;
+  --bg-card-hover: #162019;
+  --border-subtle: rgba(34, 197, 94, 0.08);
+  --border-default: rgba(34, 197, 94, 0.15);
+  --border-strong: rgba(34, 197, 94, 0.3);
+  --text-primary: #e8f5e9;
+  --text-secondary: #a5d6a7;
+  --text-muted: #558b5a;
+  --accent-green: #22c55e;
+  --accent-gold: #f59e0b;
+  --accent-red: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-outfit);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(34, 197, 94, 0.2); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(34, 197, 94, 0.4); }
+
+/* Dashboard layout */
+.sidebar-link {
+  @apply flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-150;
+  color: var(--text-muted);
+}
+.sidebar-link:hover {
+  background: rgba(34, 197, 94, 0.06);
+  color: var(--text-secondary);
+}
+.sidebar-link.active {
+  background: rgba(34, 197, 94, 0.12);
+  color: var(--accent-green);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+/* Cards */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+}
+.card:hover {
+  border-color: var(--border-default);
+}
+
+/* Input fields */
+.input-field {
+  @apply w-full px-3.5 py-2.5 rounded-lg text-sm outline-none transition-all;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+}
+.input-field::placeholder { color: var(--text-muted); }
+.input-field:focus {
+  border-color: var(--accent-green);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.08);
+}
+.input-field:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Buttons */
+.btn-primary {
+  @apply px-5 py-2.5 rounded-lg text-sm font-semibold transition-all duration-150 flex items-center gap-2;
+  background: var(--accent-green);
+  color: #0a0f0d;
+}
+.btn-primary:hover { background: #16a34a; transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+.btn-secondary {
+  @apply px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 flex items-center gap-2;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.07); }
+
+.btn-danger {
+  @apply px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 flex items-center gap-2;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+.btn-danger:hover { background: rgba(239, 68, 68, 0.2); }
+
+/* Status badges */
+.badge {
+  @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border;
+}
+
+/* Table */
+.table-row {
+  @apply border-b transition-colors cursor-pointer;
+  border-color: var(--border-subtle);
+}
+.table-row:hover { background: rgba(34, 197, 94, 0.03); }
+
+/* Section label */
+.section-label {
+  @apply text-xs font-semibold uppercase tracking-widest mb-3;
+  color: var(--text-muted);
+}
+
+/* Loading skeleton */
+.skeleton {
+  background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Animate in */
+.animate-in {
+  animation: fadeInUp 0.3s ease forwards;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* File upload zone */
+.upload-zone {
+  @apply rounded-xl p-8 text-center transition-all cursor-pointer;
+  border: 2px dashed var(--border-default);
+}
+.upload-zone:hover, .upload-zone.drag-over {
+  border-color: var(--accent-green);
+  background: rgba(34, 197, 94, 0.04);
+}
+
+/* Green glow effect */
+.glow-green {
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.15);
+}

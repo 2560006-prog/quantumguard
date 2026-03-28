@@ -1,0 +1,9 @@
+{
+  "name": "farmverify-blockchain",
+  "version": "1.0.0",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.22.0",
+    "dotenv": "^16.0.0"
+  }
+}
