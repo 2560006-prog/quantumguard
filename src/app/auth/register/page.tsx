@@ -130,8 +130,7 @@ export default function RegisterPage() {
       if (signInErr) throw signInErr;
 
       // 3. Create farmer profile
-      const { error: profileErr } = await sb.from('farmer_profiles').insert({
-        user_id: signIn.user.id,
+const { error: profileErr } = await (sb as any).from('farmer_profiles').insert({        user_id: signIn.user.id,
         full_name: form.name,
         mobile_number: form.mobile,
         aadhaar_number: form.aadhaar,
