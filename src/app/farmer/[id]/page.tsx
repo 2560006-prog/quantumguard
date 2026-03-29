@@ -1,18 +1,19 @@
-import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
+import { createClient } from '@supabase/supabase-js';
+
 export default async function PublicFarmerPage({ params }: { params: { id: string } }) {
-  const supabase = await createClient();
+  
+  // Public client — bypasses RLS for read access
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
-  const farmerIdPrefix = params.id.replace('QG-', '').toLowerCase();
-
-  // Get all profiles and filter in JS — guaranteed to work
-  const { data: allProfiles } = await (supabase as any)
+  const { data: p } = await supabase
     .from('farmer_profiles')
-    .select('*');
-
-  const p = (allProfiles || []).find((profile: any) =>
-    String(profile.id).toLowerCase().startsWith(farmerIdPrefix)
-  ) as any;
+    .select('*')
+    .eq('id', params.id)
+    .single();
 
   if (!p) return notFound();
 
@@ -87,41 +88,31 @@ export default async function PublicFarmerPage({ params }: { params: { id: strin
           </div>
           <div className="farmer-row">
             <div className="avatar">
-              {p.profile_photo_url
-                ? <img src={p.profile_photo_url} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}} />
-                : (p.full_name?.charAt(0) || 'F').toUpperCase()
+              {(p as any).profile_photo_url
+                ? <img src={(p as any).profile_photo_url} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}} />
+                : ((p as any).full_name?.charAt(0) || 'F').toUpperCase()
               }
             </div>
             <div>
-              <div className="farmer-name">{p.full_name}</div>
-              <div className="farmer-id">ID: QG-{String(p.id).slice(0,8).toUpperCase()}</div>
+              <div className="farmer-name">{(p as any).full_name}</div>
+              <div className="farmer-id">ID: {String((p as any).id).slice(0,8).toUpperCase()}</div>
               <div className={`verify-badge ${isApproved ? 'approved' : 'pending'}`}>
                 {isApproved ? '✓ Identity Verified on Blockchain' : '⏳ Verification Pending'}
               </div>
             </div>
           </div>
-          {p.blockchain_tx_hash && (
-            <div className="chain-badge">
-              <span>⛓️</span>
-              <div>
-                <div style={{fontWeight:700}}>Registered on Ethereum Sepolia</div>
-                <div className="chain-hash">TX: {p.blockchain_tx_hash}</div>
-                {p.contract_address && <div className="chain-hash">Contract: {p.contract_address}</div>}
-              </div>
-            </div>
-          )}
         </div>
 
         <div className="card">
           <div className="card-title">🌾 Farm Information</div>
           <div className="grid">
             {[
-              ['Full Name', p.full_name, false],
-              ['Mobile', '+91 ' + (p.mobile_number || ''), false],
-              ['Crop Type', p.crop_type, false],
-              ['Land Area', `${p.land_area} ${p.land_unit}`, false],
-              ['Aadhaar', `XXXX XXXX ${String(p.aadhaar_number || '').slice(-4)}`, false],
-              ['Address', p.address, true],
+              ['Full Name', (p as any).full_name, false],
+              ['Mobile', '+91 ' + ((p as any).mobile_number || ''), false],
+              ['Crop Type', (p as any).crop_type, false],
+              ['Land Area', `${(p as any).land_area} ${(p as any).land_unit}`, false],
+              ['Aadhaar', `XXXX XXXX ${String((p as any).aadhaar_number || '').slice(-4)}`, false],
+              ['Address', (p as any).address, true],
             ].map(([label, val, full]) => (
               <div key={label as string} className="field" style={full ? {gridColumn:'1/-1'} : {}}>
                 <div className="field-label">{label as string}</div>
@@ -135,14 +126,14 @@ export default async function PublicFarmerPage({ params }: { params: { id: strin
           <div className="card-title">🏦 Bank Details</div>
           <div className="grid">
             {[
-              ['Bank Name', p.bank_name],
-              ['Account Holder', p.account_holder_name],
-              ['Account No.', `****${String(p.account_number || '').slice(-4)}`],
-              ['IFSC Code', p.ifsc_code],
+              ['Bank Name', (p as any).bank_name],
+              ['Account Holder', (p as any).account_holder_name],
+              ['Account No.', `****${String((p as any).account_number || '').slice(-4)}`],
+              ['IFSC Code', (p as any).ifsc_code],
             ].map(([label, val]) => (
               <div key={label} className="field">
                 <div className="field-label">{label}</div>
-                <div className="field-val" style={{fontFamily:label.includes('Account')||label==='IFSC Code'?'monospace':'inherit'}}>{val || '—'}</div>
+                <div className="field-val">{val || '—'}</div>
               </div>
             ))}
           </div>
@@ -156,8 +147,6 @@ export default async function PublicFarmerPage({ params }: { params: { id: strin
               <div style={{fontWeight:700,color:isApproved?'#16a34a':'#d97706',fontSize:'14px'}}>
                 {isApproved ? 'VERIFIED' : (v?.status || 'PENDING').replace('_',' ').toUpperCase()}
               </div>
-              {v?.reviewed_at && <div style={{fontSize:'11px',color:'#6b7280',marginTop:'2px'}}>Reviewed: {new Date(v.reviewed_at).toLocaleDateString('en-IN')}</div>}
-              {v?.validator_remarks && <div style={{fontSize:'11px',color:'#6b7280',marginTop:'2px'}}>Remarks: {v.validator_remarks}</div>}
             </div>
           </div>
         </div>
@@ -191,8 +180,7 @@ export default async function PublicFarmerPage({ params }: { params: { id: strin
 
         <div className="footer">
           <strong>FarmVerify</strong> — Blockchain-Powered Farmer Identity System<br/>
-          Verified by an authorized FarmVerify validator.<br/>
-          Contract: <strong>0xAf9a6Eefccd63B77D860BD1d544Fa8F661DF1379</strong> · Ethereum Sepolia
+          Verified by an authorized FarmVerify validator.
         </div>
       </div>
     </>
