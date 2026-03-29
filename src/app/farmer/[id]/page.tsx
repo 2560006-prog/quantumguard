@@ -1,18 +1,19 @@
 import { createClient } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
-
 export default async function PublicFarmerPage({ params }: { params: { id: string } }) {
   const supabase = await createClient();
 
-  // WITH THIS:
-const farmerIdPrefix = params.id.replace('QG-', '').toLowerCase();
-const { data: profiles } = await (supabase as any)
-  .from('farmer_profiles')
-  .select('*')
-  .filter('id::text', 'ilike', `${farmerIdPrefix}%`);
+  const farmerIdPrefix = params.id.replace('QG-', '').toLowerCase();
 
-  
-  const p = profiles?.[0] as any;
+  // Get all profiles and filter in JS — guaranteed to work
+  const { data: allProfiles } = await (supabase as any)
+    .from('farmer_profiles')
+    .select('*');
+
+  const p = (allProfiles || []).find((profile: any) =>
+    String(profile.id).toLowerCase().startsWith(farmerIdPrefix)
+  ) as any;
+
   if (!p) return notFound();
 
   const { data: docs } = await supabase
