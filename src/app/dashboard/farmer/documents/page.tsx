@@ -155,11 +155,11 @@ export default function FarmerDocumentsPage() {
 
             <div className="upload-zone" onClick={() => fileInputRef.current?.click()}>
               {selectedFile ? (
-                <div>
-                  <FileText className="w-8 h-8 mx-auto mb-2" style={{ color: 'var(--accent-green)' }} />
-                  <p className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>{selectedFile.name}</p>
-                  <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>{formatFileSize(selectedFile.size)}</p>
-                </div>
+                <div className="w-full overflow-hidden">
+                      <FileText className="w-8 h-8 mx-auto mb-2" style={{ color: 'var(--accent-green)' }}/>
+                         <p className="text-sm font-medium truncate overflow-hidden whitespace-nowrap max-w-full" style={{ color: 'var(--text-primary)' }}> {selectedFile.name} </p>
+                         <p className="text-xs mt-1" style={{ color: 'var(--text-muted)' }} > {formatFileSize(selectedFile.size)}</p>
+                    </div>
               ) : (
                 <div>
                   <Upload className="w-8 h-8 mx-auto mb-2" style={{ color: 'var(--text-muted)' }} />
