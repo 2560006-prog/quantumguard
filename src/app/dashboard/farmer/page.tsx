@@ -339,13 +339,13 @@ export default function FarmerDashboard() {
           <div><div className="f-logo-title">FarmVerify</div><div className="f-logo-sub">Farmer Portal</div></div>
         </div>
         <nav className="f-nav">
-          {NAV.map((item, i) => (<>
-            {item.section && <div key={'s' + i} className="f-nav-section">{item.section}</div>}
-            <div key={item.id} className={'f-nav-item' + (activePage === item.id ? ' active' : '')} onClick={() => showPage(item.id)}>
-              {item.icon}{item.label}
-              {item.badge && <span className="f-nav-badge">{item.badge}</span>}
-            </div>
-          </>))}
+{NAV.map((item, i) => (<React.Fragment key={i}>
+  {item.section && <div key={'s' + i} className="f-nav-section">{item.section}</div>}
+  <div key={item.id} className={'f-nav-item' + (activePage === item.id ? ' active' : '')} onClick={() => showPage(item.id)}>
+    {item.icon}{item.label}
+    {item.badge && <span className="f-nav-badge">{item.badge}</span>}
+  </div>
+</React.Fragment>))}
         </nav>
         <div className="f-farmer-footer">
           <div className="f-farmer-avatar">{initials}</div>
