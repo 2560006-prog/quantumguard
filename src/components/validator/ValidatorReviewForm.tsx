@@ -12,9 +12,10 @@ interface Props {
   currentRemarks: string;
   validatorId: string;
   verificationId?: string;
+  farmerUserId: string;
 }
 
-export default function ValidatorReviewForm({ farmerId, currentStatus, currentRemarks, validatorId, verificationId }: Props) {
+export default function ValidatorReviewForm({ farmerId, currentStatus, currentRemarks, validatorId, verificationId, farmerUserId }: Props) {
   const router = useRouter();
   const supabase = createClient();
   const [status, setStatus] = useState(currentStatus);
@@ -40,7 +41,7 @@ export default function ValidatorReviewForm({ farmerId, currentStatus, currentRe
       } else {
         const { error } = await supabase
           .from('verification_status')
-          .insert({ ...updateData, farmer_id: farmerId, user_id: validatorId });
+          .insert({ ...updateData, farmer_id: farmerId, user_id: farmerUserId });
         if (error) throw error;
       }
 

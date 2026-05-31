@@ -12,6 +12,7 @@ interface Props {
   farmerId: string;
   currentStatus: VerificationStatus | null;
   farmerName: string;
+  farmerUserId: string;
 }
 
 const STATUS_OPTIONS: { value: VerificationStatus; label: string; color: string; bg: string; icon: React.ReactNode }[] = [
@@ -21,7 +22,7 @@ const STATUS_OPTIONS: { value: VerificationStatus; label: string; color: string;
   { value: 'rejected', label: 'Rejected', color: '#ef4444', bg: 'rgba(239,68,68,0.1)', icon: <XCircle className="w-3.5 h-3.5" /> },
 ];
 
-export default function AdminStatusUpdator({ farmerId, currentStatus, farmerName }: Props) {
+export default function AdminStatusUpdator({ farmerId, currentStatus, farmerName, farmerUserId }: Props) {
   const router = useRouter();
   const supabase = createClient();
   const [selected, setSelected] = useState<VerificationStatus>(currentStatus || 'pending');
@@ -33,7 +34,7 @@ export default function AdminStatusUpdator({ farmerId, currentStatus, farmerName
       const { error } = await supabase
         .from('verification_status')
         .upsert(
-          { farmer_id: farmerId, status: selected, reviewed_at: new Date().toISOString() },
+          { farmer_id: farmerId, user_id: farmerUserId, status: selected, reviewed_at: new Date().toISOString() },
           { onConflict: 'farmer_id' }
         );
 

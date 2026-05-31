@@ -110,6 +110,7 @@ export default async function FarmerDetailPage({ params }: { params: { id: strin
             currentRemarks={vs?.validator_remarks || ''}
             validatorId={user!.id}
             verificationId={vs?.id}
+            farmerUserId={p.user_id}
           />
         </div>
       </div>
