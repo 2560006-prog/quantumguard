@@ -136,6 +136,7 @@ export default async function AdminFarmerDetailPage({ params }: { params: { id: 
             currentValidatorId={p.assigned_validator_id}
             validators={(validators ?? []) as any}
             farmerName={p.full_name}
+            farmerUserId={p.user_id}
           />
         </div>
       </div>

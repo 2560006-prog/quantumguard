@@ -21,11 +21,7 @@ export default function AdminFarmerActions({ farmerId, farmerName }: Props) {
     if (!confirm(`Delete farmer "${farmerName}"? This cannot be undone.`)) return;
     setDeleting(true);
     try {
-      // Delete verification status
-      await supabase.from('verification_status').delete().eq('farmer_id', farmerId);
-      // Delete documents
-      await supabase.from('documents').delete().eq('farmer_id', farmerId);
-      // Delete profile
+      // Delete profile (cascades to documents and verification_status)
       const { error } = await supabase.from('farmer_profiles').delete().eq('id', farmerId);
       if (error) throw error;
       toast.success('Farmer deleted');

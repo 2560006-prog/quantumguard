@@ -11,9 +11,10 @@ interface Props {
   currentValidatorId: string | null;
   validators: { id: string; full_name: string | null; email?: string }[];
   farmerName: string;
+  farmerUserId: string;
 }
 
-export default function AdminAssignValidator({ farmerId, currentValidatorId, validators, farmerName }: Props) {
+export default function AdminAssignValidator({ farmerId, currentValidatorId, validators, farmerName, farmerUserId }: Props) {
   const router = useRouter();
   const supabase = createClient();
   const [selectedValidator, setSelectedValidator] = useState(currentValidatorId || '');
@@ -32,7 +33,7 @@ export default function AdminAssignValidator({ farmerId, currentValidatorId, val
         await supabase
           .from('verification_status')
           .upsert(
-            { farmer_id: farmerId, status: 'under_review', validator_id: selectedValidator },
+            { farmer_id: farmerId, user_id: farmerUserId, status: 'under_review', validator_id: selectedValidator },
             { onConflict: 'farmer_id' }
           );
       }
