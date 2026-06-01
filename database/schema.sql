@@ -209,6 +209,11 @@ CREATE POLICY "Farmers can view own verification status" ON public.verification_
 CREATE POLICY "Farmers can insert own verification status" ON public.verification_status
   FOR INSERT WITH CHECK (user_id = auth.uid());
 
+CREATE POLICY "Validators and admins can insert verification statuses" ON public.verification_status
+  FOR INSERT WITH CHECK (
+    EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('validator', 'admin'))
+  );
+
 CREATE POLICY "Validators and admins can view all verification statuses" ON public.verification_status
   FOR SELECT USING (
     EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role IN ('validator', 'admin'))
