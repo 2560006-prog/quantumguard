@@ -105,12 +105,16 @@ export default function FarmerDocumentsPage() {
   async function handleDelete(doc: Document) {
     if (!confirm(`Delete "${doc.document_name}"?`)) return;
     try {
-      await supabase.storage.from('farmer-documents').remove([doc.file_path]);
-      await supabase.from('documents').delete().eq('id', doc.id);
+      const { error: storageError } = await supabase.storage.from('farmer-documents').remove([doc.file_path]);
+      if (storageError) throw storageError;
+      
+      const { error: dbError } = await supabase.from('documents').delete().eq('id', doc.id);
+      if (dbError) throw dbError;
+      
       setDocuments(prev => prev.filter(d => d.id !== doc.id));
       toast.success('Document deleted');
-    } catch {
-      toast.error('Failed to delete document');
+    } catch (err: unknown) {
+      toast.error(err instanceof Error ? err.message : 'Failed to delete document');
     }
   }
 

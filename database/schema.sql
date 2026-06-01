@@ -277,6 +277,9 @@ CREATE POLICY "Farmers can upload own documents" ON storage.objects
 CREATE POLICY "Farmers can view own documents" ON storage.objects
   FOR SELECT USING (bucket_id = 'farmer-documents' AND auth.uid()::text = (storage.foldername(name))[1]);
 
+CREATE POLICY "Farmers can delete own documents" ON storage.objects
+  FOR DELETE USING (bucket_id = 'farmer-documents' AND auth.uid()::text = (storage.foldername(name))[1]);
+
 CREATE POLICY "Validators and admins can view all documents" ON storage.objects
   FOR SELECT USING (
     bucket_id = 'farmer-documents' AND
