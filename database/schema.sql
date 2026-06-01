@@ -130,6 +130,24 @@ CREATE OR REPLACE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
+-- Function: Protect sensitive user columns from unauthorized updates
+CREATE OR REPLACE FUNCTION public.protect_user_role()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF NEW.role IS DISTINCT FROM OLD.role THEN
+    IF NOT EXISTS (SELECT 1 FROM public.users WHERE id = auth.uid() AND role = 'admin') THEN
+      RAISE EXCEPTION 'Unauthorized: Only admins can change user roles.';
+    END IF;
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- Trigger: Enforce role protection on users table
+CREATE TRIGGER ensure_user_role_protection
+  BEFORE UPDATE ON public.users
+  FOR EACH ROW EXECUTE FUNCTION public.protect_user_role();
+
 -- ============================================================
 -- ROW LEVEL SECURITY (RLS)
 -- ============================================================
@@ -258,6 +276,9 @@ CREATE POLICY "Farmers can upload own documents" ON storage.objects
 
 CREATE POLICY "Farmers can view own documents" ON storage.objects
   FOR SELECT USING (bucket_id = 'farmer-documents' AND auth.uid()::text = (storage.foldername(name))[1]);
+
+CREATE POLICY "Farmers can delete own documents" ON storage.objects
+  FOR DELETE USING (bucket_id = 'farmer-documents' AND auth.uid()::text = (storage.foldername(name))[1]);
 
 CREATE POLICY "Validators and admins can view all documents" ON storage.objects
   FOR SELECT USING (
