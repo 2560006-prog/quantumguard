@@ -128,6 +128,8 @@ export default async function AdminFarmerDetailPage({ params }: { params: { id: 
             currentStatus={v?.status ?? 'pending'}
             currentRemarks={v?.validator_remarks ?? ''}
             verificationId={v?.id}
+            farmerName={p.full_name}
+            farmerUserId={p.user_id}
           />
 
           {/* ASSIGN VALIDATOR */}
