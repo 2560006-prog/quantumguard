@@ -208,3 +208,30 @@ npm run lint       # ESLint check
 - Supabase email confirmation may be required depending on your project settings. For development, disable it in Auth → Settings → Email Confirmations
 - The `farmer_overview` view in the DB provides a convenient joined query used across dashboards
 - All timestamps are stored in UTC (Supabase default)
+
+## ✨ README Improvement Notes
+
+### 📌 Formatting Enhancements Needed
+- Improve heading hierarchy for better readability
+- Ensure consistent spacing between sections
+- Use proper Markdown formatting for code blocks and lists
+- Align all installation and usage steps properly
+
+### 🚀 Suggested Structure Upgrade
+- Introduction
+- Features
+- Tech Stack
+- Installation
+- Usage
+- Project Structure
+- Contribution Guidelines
+- License
+
+### 🛠️ Documentation Improvements
+- Add badges (optional): build, license, contributors
+- Add screenshots for better UI understanding
+- Standardize code blocks for commands
+
+### 🎯 Goal
+Improve onboarding experience for new contributors and users by making README more structured, readable, and professional.
+
