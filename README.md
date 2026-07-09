@@ -117,11 +117,12 @@ Open [http://localhost:3000](http://localhost:3000)
 
 After setting up Supabase, create users via the app's register page or Supabase Auth dashboard.
 
+```markdown
 **To create an Admin:**
 1. Register a user with any email (e.g., `admin@demo.com`)
 2. In Supabase SQL Editor, run:
-```sql
-UPDATE public.users SET role = 'admin' WHERE email = 'admin@demo.com';
+   ```sql
+   UPDATE public.users SET role = 'admin' WHERE email = 'admin@demo.com';
 ```
 
 **To create a Validator:**
